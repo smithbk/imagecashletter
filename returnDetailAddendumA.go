@@ -248,9 +248,12 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.BOFDEndorsementDate.IsZero() {
+                fmt.Printf("HERE: ERROR: BOFDEndorsementDate is zero\n")
+                /* KEITH
 		return &FieldError{FieldName: "BOFDEndorsementDate",
 			Value: rdAddendumA.BOFDEndorsementDate.String(),
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
+                */
 	}
 	if rdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",

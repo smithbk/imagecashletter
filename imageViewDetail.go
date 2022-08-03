@@ -322,8 +322,11 @@ func (ivDetail *ImageViewDetail) Validate() error {
 	// Conditional
 	if ivDetail.DigitalSignatureMethod != "" {
 		if err := ivDetail.isDigitalSignatureMethod(ivDetail.DigitalSignatureMethod); err != nil {
+                        fmt.Printf("HERE: ERROR: DigitalSignatureMethod: '%s'\n", ivDetail.DigitalSignatureMethod)
+                        /* KEITH
 			return &FieldError{FieldName: "DigitalSignatureMethod",
 				Value: ivDetail.DigitalSignatureMethod, Msg: err.Error()}
+                        */
 		}
 	}
 	// Conditional
@@ -360,9 +363,12 @@ func (ivDetail *ImageViewDetail) fieldInclusion() error {
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	if ivDetail.ImageCreatorRoutingNumberField() == "000000000" {
+                fmt.Printf("HERE: ERROR: ImageCreatorRoutingNumberField: '%s'\n", ivDetail.ImageCreatorRoutingNumberField())
+                /* KEITH
 		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
 			Value: ivDetail.ImageCreatorRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
+                */
 	}
 	if ivDetail.ImageCreatorDate.IsZero() {
 		return &FieldError{FieldName: "ImageCreatorDate",
