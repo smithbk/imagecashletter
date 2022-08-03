@@ -211,7 +211,9 @@ func (cl *CashLetter) build() error {
 
 			for x := range rd.ReturnDetailAddendumD {
 				rd.ReturnDetailAddendumD[x].SetEndorsingBankItemSequenceNumber(rdSequenceNumber)
-				rd.ReturnDetailAddendumA[x].RecordNumber = rdAddendumDRecordNumber
+				//rd.ReturnDetailAddendumA[x].RecordNumber = rdAddendumDRecordNumber
+				//KEITH: This fix can be removed once https://github.com/moov-io/imagecashletter/pull/248 is merged
+				rd.ReturnDetailAddendumD[x].RecordNumber = rdAddendumDRecordNumber
 				rdAddendumDRecordNumber++
 				if rdAddendumDRecordNumber > 99 {
 					rdAddendumDRecordNumber = 1
