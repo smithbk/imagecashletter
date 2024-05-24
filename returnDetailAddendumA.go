@@ -252,9 +252,12 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.BOFDEndorsementDate.IsZero() {
-		return &FieldError{FieldName: "BOFDEndorsementDate",
-			Value: rdAddendumA.BOFDEndorsementDate.String(),
-			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
+		fmt.Printf("WARNING: temporarily ignoring imagecashletter detected error, but either imagecashletter should be fixed or the X9 file entry returned as invalid: rdAddendumA.BOFDEndorsementDate.isZero")
+		/*
+			return &FieldError{FieldName: "BOFDEndorsementDate",
+				Value: rdAddendumA.BOFDEndorsementDate.String(),
+				Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
+		*/
 	}
 	if rdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",

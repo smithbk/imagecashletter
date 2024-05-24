@@ -319,8 +319,11 @@ func (ivDetail *ImageViewDetail) Validate() error {
 	// Conditional
 	if ivDetail.DigitalSignatureIndicatorField() != "" {
 		if err := ivDetail.isDigitalSignatureIndicator(ivDetail.DigitalSignatureIndicator); err != nil {
-			return &FieldError{FieldName: "DigitalSignatureIndicator",
-				Value: ivDetail.DigitalSignatureIndicatorField(), Msg: err.Error()}
+			fmt.Printf("WARNING: temporarily ignoring imagecashletter detected error, but either imagecashletter should be fixed or the X9 file entry returned as invalid: digital signature field error = %v", err)
+			/*
+				return &FieldError{FieldName: "DigitalSignatureIndicator",
+					Value: ivDetail.DigitalSignatureIndicatorField(), Msg: err.Error()}
+			*/
 		}
 	}
 	// Conditional
@@ -364,9 +367,12 @@ func (ivDetail *ImageViewDetail) fieldInclusion() error {
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	if ivDetail.ImageCreatorRoutingNumberField() == "000000000" {
-		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
-			Value: ivDetail.ImageCreatorRoutingNumber,
-			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
+		fmt.Printf("WARNING: temporarily ignoring imagecashletter detected error, but either imagecashletter should be fixed or the X9 file entry returned as invalid: ImageCreatorRoutingNumberField is '00000000'")
+		/*
+			return &FieldError{FieldName: "ImageCreatorRoutingNumber",
+				Value: ivDetail.ImageCreatorRoutingNumber,
+				Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
+		*/
 	}
 	if ivDetail.ImageCreatorDate.IsZero() {
 		return &FieldError{FieldName: "ImageCreatorDate",
