@@ -9,9 +9,8 @@ build-server:
 	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
 
 build-webui:
-	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./cmd/webui/assets/wasm_exec.js
-	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/cmd/webui/icl/
-	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
+	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js
+	GOOS=js GOARCH=wasm go build -o ./docs/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/docs/webui/
 
 .PHONY: check
 check:
@@ -57,7 +56,14 @@ else
 	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
 endif
 
-docker: clean docker-hub docker-openshift docker-webui
+dist-webui: build-webui
+	git config user.name "moov-bot"
+	git config user.email "oss@moov.io"
+	git add ./docs/webui/assets/wasm_exec.js ./docs/webui/assets/imagecashletter.wasm
+	git commit -m "chore: updating wasm webui" || echo "No changes to commit"
+	git push origin master
+
+docker: clean docker-hub docker-openshift
 
 docker-hub:
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
@@ -67,10 +73,6 @@ docker-openshift:
 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
 
-docker-webui:
-	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile.webui .
-	docker tag moov/imagecashletter-webui:$(VERSION) moov/imagecashletter-webui:latest
-
 release: docker AUTHORS
 	go vet ./...
 	go test -coverprofile=cover-$(VERSION).out ./...
@@ -79,8 +81,6 @@ release: docker AUTHORS
 release-push:
 	docker push moov/imagecashletter:$(VERSION)
 	docker push moov/imagecashletter:latest
-	docker push moov/imagecashletter-webui:$(VERSION)
-	docker push moov/imagecashletter-webui:latest
 
 quay-push:
 	docker push quay.io/moov/imagecashletter:$(VERSION)
@@ -106,4 +106,3 @@ tagged-release:
 .PHONY: preview-openapi
 preview-openapi:
 	@docker run --rm -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(shell pwd)/openapi.yaml:/openapi.yaml swaggerapi/swagger-ui
-	
